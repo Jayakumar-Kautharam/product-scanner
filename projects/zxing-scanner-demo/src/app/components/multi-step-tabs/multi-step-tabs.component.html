@@ -1,0 +1,36 @@
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-11 col-sm-10 col-md-10 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
+      <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light float-right ml-auto mr-2">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item" *ngIf="userDeatils.Authentication" (click)="logoutUserAuth()" ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
+          </ul>
+        </nav>
+
+        <h2 *ngIf="!userDeatils.Authentication" id="heading">Sign In Your Account</h2>
+        <h2 *ngIf="userDeatils.Authentication" id="heading">User Authenticated</h2>
+        <p *ngIf="currentStep != 4">{{ message }}</p>
+        <p *ngIf="currentStep === 4"><img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> Traking Number Verified..!</p>
+
+          <!-- progressbar -->
+          <ul id="progressbar">
+            <li [ngClass]="{'active': (currentStep > 1 && userDeatils.Authentication)}" id="personal"><strong>Authenication</strong></li>
+            <li [ngClass]="{'active': (currentStep > 2 && userDeatils.Authentication)}" id="payment"><strong>Order</strong></li>
+            <li [ngClass]="{'active': (currentStep > 3 && userDeatils.Authentication)}" id="confirm"><strong>Tracking</strong></li>
+          </ul>
+          <app-scanner (scannerValue)="getScannedValue($event)"></app-scanner>
+          <fieldset *ngIf="currentStep === 3">
+            <input type="button" (click)="previousStep()" class="previous action-button-previous" value="Previous" />
+          </fieldset>
+          <input
+            #barcodeInput
+            type="hidden"
+            (input)="onBarcodeInput($event)"
+            autofocus
+          />
+      </div>
+    </div>
+  </div>
+</div>
