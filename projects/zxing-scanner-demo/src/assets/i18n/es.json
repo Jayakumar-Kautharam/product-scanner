@@ -1,0 +1,18 @@
+{
+  "SIGN_IN_MESSAGE": "Escanee la etiqueta de usuario",
+  "USER_AUTHENTICATED": "Usuario autenticado",
+  "SCAN_ORDER_LABEL": "Escanee la etiqueta del pedido",
+  "INVALID_ORDER_ID": "ID de pedido no válido",
+  "ORDER_SCANNED_SUCCESSFUL": "Pedido escaneado con éxito",
+  "SCAN_TRACKER_LABEL": "Escanee la etiqueta del rastreador",
+  "INVALID_TRACKING_NUMBER": "Número de rastreo no válido",
+  "TRACKING_DATA_NOT_FOUND": "Datos de seguimiento no encontrados",
+  "TRACKING_NUMBER_VERIFIED": "Número de rastreo verificado",
+  "AUTHENTICATION": "Autenticación",
+  "ORDER": "Pedido",
+  "TRACKING": "Seguimiento",
+  "CONFIRMATION": "Confirmación",
+  "MULTIPLE_TRACKING_NUMBERS_FOUND": "Se encontraron varios números de seguimiento. ¿Quieres continuar?",
+  "CANCEL": "Cancelar",
+  "CONTINUE": "Continuar"
+}

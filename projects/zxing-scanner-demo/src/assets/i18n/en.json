@@ -1,0 +1,18 @@
+{
+  "SIGN_IN_MESSAGE": "Scan User Label",
+  "USER_AUTHENTICATED": "User Authenticated",
+  "SCAN_ORDER_LABEL": "Scan Order Label",
+  "INVALID_ORDER_ID": "Invalid Order Id",
+  "ORDER_SCANNED_SUCCESSFUL": "Order Scanned Successfully",
+  "SCAN_TRACKER_LABEL": "Scan Tracker Label",
+  "INVALID_TRACKING_NUMBER": "Invalid Tracking Number",
+  "TRACKING_DATA_NOT_FOUND": "Tracking Data Not Found",
+  "TRACKING_NUMBER_VERIFIED": "Tracking Number Verified",
+  "AUTHENTICATION": "Authentication",
+  "ORDER": "Order",
+  "TRACKING": "Tracking",
+  "CONFIRMATION": "Confirmation",
+  "MULTIPLE_TRACKING_NUMBERS_FOUND": "Multiple tracking numbers found. Do you want to continue?",
+  "CANCEL": "Cancel",
+  "CONTINUE": "Continue"
+}

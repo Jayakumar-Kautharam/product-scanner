@@ -1,0 +1,33 @@
+<!--<div class="form-check form-switch">
+  <input
+    class="form-check-input"
+    type="checkbox"
+    id="flexSwitchCheckDefault"
+    [(ngModel)]="isToggled"
+    (change)="onToggleChange()">
+  <label class="form-check-label" for="flexSwitchCheckDefault">
+    {{ isToggled ? 'On' : 'Off' }}
+  </label>
+</div>-->
+
+<!--<ng-toggle
+[(ngModel)]="config.value"
+[disabled]="config.disabled"
+[width]="config.width"
+[height]="config.height"
+[margin]="config.margin"
+[labels]="config.labels"
+[color]="config.color"
+[switchColor]="config.switchColor"
+[fontColor]="config.fontColor"
+[fontSize]="config.fontSize"
+[textAlign]="config.textAlign"
+(change)="getToggleValue()"
+></ng-toggle>-->
+<ng-toggle
+[(ngModel)]="config.value"
+[width]="config.width"
+[labels]="config.labels"
+[height]="config.height"
+(change)="getToggleValue()"
+></ng-toggle>

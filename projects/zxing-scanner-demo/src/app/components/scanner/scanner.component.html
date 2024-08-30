@@ -1,4 +1,4 @@
-<zxing-scanner *ngIf="!qrResultString" [torch]="torchEnabled" [device]="deviceCurrent" (deviceChange)="onDeviceChange($event)" (scanSuccess)="onCodeResult($event)"
-    [formats]="formatsEnabled" [tryHarder]="tryHarder" (permissionResponse)="onHasPermission($event)"
-    (camerasFound)="onCamerasFound($event)" (torchCompatible)="onTorchCompatible($event)"></zxing-scanner>
+<zxing-scanner *ngIf="!qrResultString" [torch]="torchEnabled" [device]="deviceCurrent" (scanSuccess)="onCodeResult($event)"
+    [formats]="formatsEnabled" [tryHarder]="tryHarder"
+    (camerasFound)="onCamerasFound($event)" ></zxing-scanner>
 

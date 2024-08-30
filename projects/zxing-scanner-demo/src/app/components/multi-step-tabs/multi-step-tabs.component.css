@@ -10,13 +10,25 @@ html {
 p {
   color: grey
 }
-
+.width-100{
+  width: 100%;
+}
 #heading {
   text-transform: uppercase;
-  color: #673AB7;
-  font-weight: normal
+  color: #259a25;
+  font-weight: Bold;
+  text-align: left;
+  margin-left: 10px;
+  color: #7158c0;
+  z-index: 99;
+  position: absolute;
+  top: 40px;
+  font-size: medium;
 }
 
+.language-select {
+  font-size: 12px; /* Adjust the font size as needed */
+}
 
  fieldset {
   background: white;
@@ -58,13 +70,51 @@ p {
   -moz-box-shadow: none !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  border: 1px solid #673AB7;
+  border: 1px solid #259a25;
   outline-width: 0
 }
 
+
+.card {
+  position: relative; /* Ensure that the card acts as a relative positioning context */
+  padding-top: 60px; /* Adjusted padding to ensure space for the fixed message */
+}
+
+.fixed-message {
+  position: absolute; /* Positioning relative to the card */
+  top: 0; /* Align to the top of the card */
+  left: 0; /* Align to the left of the card */
+  width: 100%; /* Stretch across the card */
+  background-color: white; /* Add background color */
+  z-index: 10; /* Ensure it's above other elements */
+  padding: 10px; /* Add padding */
+}
+.navBarfixed{
+  height: 54px;
+}
+
+.nav-item i {
+  font-size: 18px; /* Ensure all icons are the same size */
+  vertical-align: middle; /* Align icons in the middle */
+}
+
+.nav-item .fa {
+  display: inline-block; /* Makes sure font-awesome icons behave like inline elements */
+}
+
+.marginBottom7{
+  margin-bottom: 7px;
+}
+.alertMessage{
+  top: 65px;
+  height: 24px;
+  box-shadow:none;
+  font-size: small;
+  font-weight: 500;
+}
  .action-button {
   width: 100px;
-  background: #673AB7;
+  background: #259a25;
   font-weight: bold;
   color: white;
   border: 0 none;
@@ -101,19 +151,21 @@ p {
 .card {
   z-index: 0;
   border: none;
-  position: relative
+  position: relative;
+  border-radius: 0px;
+  height: 100vh;
 }
 
 .fs-title {
   font-size: 25px;
-  color: #673AB7;
+  color: #259a25;
   margin-bottom: 15px;
   font-weight: normal;
   text-align: left
 }
 
 .purple-text {
-  color: #673AB7;
+  color: #259a25;
   font-weight: normal
 }
 
@@ -131,13 +183,14 @@ p {
 }
 
 #progressbar {
-  margin-bottom: 30px;
-  overflow: hidden;
-  color: lightgrey
+  margin-bottom: 10px;
+  /* overflow: hidden; */
+  color: lightgrey;
+  margin-top: 95px;
 }
 
 #progressbar .active {
-  color: #673AB7
+  color: #259a25
 }
 
 #progressbar li {
@@ -195,7 +248,7 @@ p {
 
 #progressbar li.active:before,
 #progressbar li.active:after {
-  background: #673AB7
+  background: #259a25
 }
 
 .progress {
@@ -203,7 +256,7 @@ p {
 }
 
 .progress-bar {
-  background-color: #673AB7
+  background-color: #259a25
 }
 
 .fit-image {
@@ -216,4 +269,40 @@ p {
 }
 .mr-2{
   margin-right: 10px;
+}
+
+/* Apply these styles to ensure the scanner is always visible */
+
+.parentScanner {
+  position: relative; /* This ensures the child is positioned relative to this container */
+  /* height: 100px;  Adjust the height as needed */
+}
+
+.childScanner {
+  position: fixed; /* Fix the scanner to the viewport */
+  bottom: 20px; /* Position from the bottom */
+  right: 20px; /* Position from the right */
+  z-index: 1000; /* Ensure it is on top of other content */
+  background-color: white; /* Optional: Add a background color */
+  padding: 10px; /* Optional: Add padding */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+  border-radius: 8px; /* Optional: Add rounded corners */
+}
+
+/* Ensure that the progress bar and other content have enough margin to not overlap with the scanner */
+
+.navEvents{
+  font-size: larger;
+}
+
+.childScanerImg{
+  width: 100%;
+}
+
+.fontSize-12{
+  font-size: medium;
+}
+
+.font-weight-bold{
+  font-weight: 700;
 }

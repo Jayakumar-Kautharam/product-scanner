@@ -1,33 +1,56 @@
 
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-11 col-sm-10 col-md-10 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
-      <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light float-right ml-auto mr-2">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item" *ngIf="userDeatils.Authentication" (click)="logoutUserAuth()" ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</li>
+    <div class="col-12 col-sm-10 col-md-10 col-lg-6 col-xl-5 text-center p-0">
+      <div class="card px-0 pt-0 pb-0 position-relative">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light float-right ml-auto mb-2  width-100 fixed-message navBarfixed">
+
+          <ul class="navbar-nav ml-auto navEvents">
+            <li class="nav-item mr-2 fontSize-12" >
+              <!--<small class="text-muted font-weight-bold mr-2">Spanish</small>
+              <app-switch-toggle
+              (toggleValue)="changeLanguage($event)"
+              ></app-switch-toggle>-->
+              <select [(ngModel)]="selectedLanguage" (change)="changeLanguage($event)" class="language-select">
+                <option value="en">English - EN</option>
+                <option value="es">Española - ES</option>
+              </select>
+            </li>
+            <li class="nav-item mr-2 fontSize-12" >
+              <i class="fa fa-camera mr-2" aria-hidden="true"></i>
+              <app-switch-toggle
+              (toggleValue)="getCameraMode($event)"
+              ></app-switch-toggle>
+            </li>
+            <li class="nav-item" *ngIf="currentStep === 3" (click)="previousStep()" ><i class="fa fa-arrow-left mr-2 marginBottom7" aria-hidden="true"></i></li>
+            <li class="nav-item" *ngIf="userDeatils.Authentication" (click)="logoutUserAuth()" ><i class="fa fa-power-off mr-2 marginBottom7" aria-hidden="true"></i></li>
           </ul>
         </nav>
-
-        <h2 *ngIf="!userDeatils.Authentication" id="heading">Sign In Your Account</h2>
-        <h2 *ngIf="userDeatils.Authentication" id="heading">User Authenticated</h2>
-        <p *ngIf="currentStep != 4">{{ message }}</p>
-        <p *ngIf="currentStep === 4"><img src="https://i.imgur.com/GwStPmg.png" class="fit-image"> Traking Number Verified..!</p>
-
+        <h4 class="float-left" id="heading">{{ signInMessage | translate }}</h4>
+        <div class="fixed-message alertMessage pt-0 pb-0">
+          <p [ngClass]="{'text-danger': errorMessage }" class="" *ngIf="currentStep != 4">{{ notifyMessage | translate }}</p>
+          <p *ngIf="currentStep === 4">
+            <img src="https://i.imgur.com/GwStPmg.png" class="fit-image">{{ 'TRACKING_NUMBER_VERIFIED' | translate }}
+          </p>
+        </div>
           <!-- progressbar -->
           <ul id="progressbar">
-            <li [ngClass]="{'active': (currentStep > 1 && userDeatils.Authentication)}" id="personal"><strong>Authenication</strong></li>
-            <li [ngClass]="{'active': (currentStep > 2 && userDeatils.Authentication)}" id="payment"><strong>Order</strong></li>
-            <li [ngClass]="{'active': (currentStep > 3 && userDeatils.Authentication)}" id="confirm"><strong>Tracking</strong></li>
+            <li [ngClass]="{'active': (currentStep > 1 && userDeatils.Authentication)}" id="personal"><strong>{{ 'AUTHENTICATION' | translate }}</strong></li>
+            <li [ngClass]="{'active': (currentStep > 2 && userDeatils.Authentication)}" id="payment"><strong>{{ 'ORDER' | translate }}</strong></li>
+            <li [ngClass]="{'active': (currentStep > 3 && userDeatils.Authentication)}" id="confirm"><strong>{{ 'TRACKING' | translate }}</strong></li>
           </ul>
-          <app-scanner (scannerValue)="getScannedValue($event)"></app-scanner>
-          <fieldset *ngIf="currentStep === 3">
+          <div class="parentScanner">
+            <small>{{ scannedValue }}</small>
+            <app-scanner *ngIf="cameraMode" class="childScaner" (scannerValue)="getScannedValue($event)"></app-scanner>
+            <img *ngIf="!cameraMode" class="childScanerImg" src="../../../assets/images/scanner.gif" alt="Loading...">
+          </div>
+
+         <!-- <fieldset *ngIf="currentStep === 3">
             <input type="button" (click)="previousStep()" class="previous action-button-previous" value="Previous" />
-          </fieldset>
+          </fieldset>-->
           <input
             #barcodeInput
             type="hidden"
-            (input)="onBarcodeInput($event)"
             autofocus
           />
       </div>
