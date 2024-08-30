@@ -54,6 +54,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       MultiStepTabsComponent,
       ScannerComponent,
       SwitchToggleComponent,
+
       BootstrapSwitchDirective,
       TrakingOrderConfirmationComponent
     ],
