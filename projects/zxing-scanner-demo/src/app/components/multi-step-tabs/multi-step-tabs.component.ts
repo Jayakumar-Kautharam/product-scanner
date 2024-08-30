@@ -5,6 +5,8 @@ import { UserInterface } from '../../interface/UserInterface';
 import { ShipstationService } from '../../services/shipstation.service';
 import { Item } from '../../models/item.model';
 import { TranslateService } from '@ngx-translate/core';
+import { NgbCarouselConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TrakingOrderConfirmationComponent } from '../../model-popups/traking-order-confirmation/traking-order-confirmation.component';
 
 @Component({
   selector: 'app-multi-step-tabs',
@@ -36,7 +38,8 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
 
   constructor(
     private shipStationService: ShipstationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private modalService: NgbModal,
     ) {
       this.translate.setDefaultLang(this.selectedLanguage); // Set the default language
 
@@ -187,6 +190,10 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
   private handleTrackingResponse(data: any): void {
 
     if (data && data.shipments && data.shipments.length > 0) {
+
+      if(this.shipstationTrakingNumber.length > 0){
+        //this.getConfirmationFromUser();
+      }
       const receivedTrackingNumbers: string[] = data.shipments.map(shipment => shipment.trackingNumber);
       const isTrackingNumberExists = receivedTrackingNumbers.some(trackingNumber =>
         this.shipstationTrakingNumber.includes(trackingNumber)
@@ -208,6 +215,15 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
       this.errorMessage = true;
       this.displayMessage('TRACKING_DATA_NOT_FOUND');
     }
+  }
+
+
+  getConfirmationFromUser(){
+    const modalRefApprove = this.modalService.open(TrakingOrderConfirmationComponent);
+    modalRefApprove.componentInstance.UserData.subscribe((data:any) => {
+
+      alert();
+    });
   }
 
   private displayMessage(msg: string): void {
