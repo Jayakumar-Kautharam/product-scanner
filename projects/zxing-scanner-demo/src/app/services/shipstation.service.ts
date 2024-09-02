@@ -16,13 +16,30 @@ export class ShipstationService {
 
   constructor(private httpClient: HttpClient) { }
 
+  headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
+
+
+  // User Authentication
+  userUthentication(barcode:any){
+    return this.httpClient.post<any>(`${environment.RediesURL}agent-auth`, barcode, { headers: this.headers });
+  }
+
+  // Step - 2 Scan
+  orderScan(orderData:any){
+    return this.httpClient.post<any>(`${environment.RediesURL}validate-order-scan`, orderData, { headers: this.headers });
+  }
+  // Step - 2 Scan
+  validateTrackingDetails(trackingData:any){
+    return this.httpClient.post<any>(`${environment.RediesURL}validate-tracking-details`, trackingData, { headers: this.headers });
+  }
 
   getShisatationData(Order:string): Observable<any> {
     /*&const headers = new HttpHeaders()
       .set('Authorization', 'Basic ' + btoa(`${this.apiKey}:${this.apiSecret}`));
     return this.httpClient.get(`${this.apiEndpoint}shipments?orderId=${Order}`, { headers: headers });*/
-    return this.httpClient.get(`${environment.feedbackTrackerUrl}getShipstationShipmentDetails?orderId=${Order}`);
+    return this.httpClient.get(`${environment.feedbackTrackerUrl}agent-auth?orderId=${Order}`);
   }
+
 
   getShisatationDataByTrakingNumber(trakingNumber): Observable<any> {
     /*const headers = new HttpHeaders()
@@ -30,6 +47,8 @@ export class ShipstationService {
     return this.httpClient.get(`${this.apiEndpoint}shipments?trackingNumber=${trakingNumber}`, { headers: headers });*/
     return this.httpClient.get(`${environment.feedbackTrackerUrl}getShipstationShipmentDetails?trackingNumber=${trakingNumber}`);
   }
+
+
 
 
 }

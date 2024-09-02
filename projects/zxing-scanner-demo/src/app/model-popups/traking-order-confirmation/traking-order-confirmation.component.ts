@@ -18,7 +18,7 @@ export class TrakingOrderConfirmationComponent {
       this.translate.setDefaultLang('en'); // Set the default language
   }
     public continueWithNextTrackingNumber(result:boolean): void {
-      this.OutputData.emit();
+      this.OutputData.emit(result);
       this.modal.close();
     }
 

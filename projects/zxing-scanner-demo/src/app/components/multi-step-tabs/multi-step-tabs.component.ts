@@ -24,7 +24,7 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
   public signInMessage = '';
 
   currentStep = 1;
-  userDeatils: UserInterface = { Authentication: false, UserId: '' };
+  userDeatils: UserInterface = { Authentication: false, UserData: {} };
   shipstationTrakingNumber:String[] = [];
   public notifyMessage:string = '';
   errorMessage:boolean = false;
@@ -35,6 +35,9 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
   scannedValue:any="";
 
   selectedLanguage:string = 'en';
+  barcodeScanned:boolean = false;
+
+  orderDetailsExist:boolean = false;
 
   constructor(
     private shipStationService: ShipstationService,
@@ -66,6 +69,7 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
     }
     this.sessionSubscription = interval(this.sessionCheckInterval).subscribe(() => this.validateSession());
     this.validateSession();
+    this.validateStep2();
   }
 
   private stopSessionCheck(): void {
@@ -82,13 +86,13 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
   }
 
   private getUserSession() {
-    const cachedData = localStorage.getItem(environment.userDetails);
-    const cachedTimestamp = localStorage.getItem(`${environment.userDetails}_timestamp`) || '0';
-    if (cachedData && (Date.now() - Number(cachedTimestamp) < this.cacheDuration)) {
-      this.userDeatils = { Authentication: true, UserId: cachedData };
+    const cachedData:any = JSON.parse(localStorage.getItem(environment.userDetails));
+    //const cachedTimestamp = localStorage.getItem(`${environment.userDetails}_timestamp`) || '0';
+    if (cachedData) {
+      this.userDeatils = { Authentication: true, UserData: cachedData };
       return cachedData;
     } else {
-      this.userDeatils = { Authentication: false, UserId: '' };
+      this.userDeatils = { Authentication: false, UserData: {} };
       this.currentStep = 1;
       return null;
     }
@@ -96,54 +100,96 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
 
   logoutUserAuth(): void {
     localStorage.removeItem(environment.userDetails);
-    localStorage.removeItem(`${environment.userDetails}_timestamp`);
+    localStorage.removeItem(environment.step2);
+    localStorage.removeItem(environment.step2TrakingDetails);
     localStorage.clear();
     this.signInMessage = 'SIGN_IN_MESSAGE';
     this.validateSession();
   }
 
   getScannedValue(scannedValue: string): void {
-    //console.log('currentStep', this.currentStep);
+    //this.getConfirmationFromUser();
     this.scannedValue = scannedValue;
-    if (this.currentStep === 1) {
+    if (!this.barcodeScanned && this.currentStep === 1) {
       this.startUserSession(scannedValue);
-    } else if (this.currentStep === 2) {
+    } else if (!this.barcodeScanned && this.currentStep === 2) {
       this.processOrderNumber(scannedValue);
-    } else if (this.currentStep === 3) {
+    } else if (!this.barcodeScanned && this.currentStep === 3) {
       this.verifyTrackingNumber(scannedValue);
     }
   }
 
-  private startUserSession(scannedValue: string): void {
+
+  /****************************** Start Of Step-1  *********************************/
+
+  async startUserSession(scannedValue: string) {
+    this.barcodeScanned = true;
     this.signInMessage = '';
-    const refinedValue = this.removeSpecialChars(scannedValue);
-    if(refinedValue.trim() != ''){
-      localStorage.setItem(environment.userDetails, refinedValue);
-      localStorage.setItem(`${environment.userDetails}_timestamp`, String(Date.now()));
+    //const refinedValue = this.removeSpecialChars(scannedValue);
+    const userBarcode:any = {
+      "barcode": scannedValue
+    }
+    await this.shipStationService.userUthentication(userBarcode).subscribe({
+      next:(data)=>this.handleUserSession(data, scannedValue),
+      error:(e)=>{
+        console.log(e);
+      }
+    });
+  }
+
+  handleUserSession(data:any, scannedValue){
+    this.barcodeScanned = false;
+    if(data && data.UserId){
+      const UserData:any = {
+        'UserId':data.UserId,
+        'UserBarcode':scannedValue,
+        'SessionId': this.generateSessionId(scannedValue),
+      }
       this.currentStep = 2;
-      //this.signInMessage = 'User Authenticated';
       this.errorMessage = false;
       this.displayMessage('USER_AUTHENTICATED');
-      setTimeout(() => {
-        this.signInMessage = 'SCAN_ORDER_LABEL';
-      }, 3000);
+      this.userDeatils = { Authentication: true, UserData: UserData };
+      localStorage.setItem(environment.userDetails, JSON.stringify(UserData));
+      this.signInMessage = 'SCAN_ORDER_LABEL';
     }else{
       this.errorMessage = true;
       this.displayMessage('AUTHENTICATION_FAILED');
+      this.userDeatils = { Authentication: true, UserData: null };
       this.currentStep = 1;
     }
-
   }
 
-  removeSpecialChars(orderNumber):string{
-    return orderNumber.replace(/[^\w]/g, '');
-  }
+  private generateSessionId(scannedValue: string): string {
+    const now = new Date();
 
-  private processOrderNumber(orderNumber: string): void {
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
+    const formattedDate = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+
+    return `${scannedValue}_${formattedDate}`;
+}
+
+
+  /****************************** End Of Step-1  *********************************/
+
+
+
+
+  /****************************** Start Of Step-2  *********************************/
+
+  async processOrderNumber(orderNumber: string) {
+    this.barcodeScanned = true;
     const sanitizedHex = this.removeSpecialChars(orderNumber);
-    const decimalOutput = this.convertHexToDecimal(sanitizedHex);
     //const decimalOutput = '762075407';
-    this.shipStationService.getShisatationData(sanitizedHex).subscribe({
+    let userDetails:any = JSON.parse(localStorage.getItem(environment.userDetails));
+    userDetails.OrderId = Number(sanitizedHex);
+    await this.shipStationService.orderScan(userDetails).subscribe({
       next: data => this.handleOrderResponse(data),
       error: (error:any) => {
         this.errorMessage = true;
@@ -153,47 +199,146 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private convertHexToDecimal(hex: string): number | null {
-    const decimal = parseInt(hex, 16);
-    return isNaN(decimal) ? null : decimal;
+  removeSpecialChars(orderNumber):string{
+    return orderNumber.replace(/[^\w]/g, '');
   }
 
   private handleOrderResponse(data: any): void {
-    if (data && data.shipments.length > 0) {
-      //this.shipstationTrakingNumber = data.shipments[0].trackingNumber;
-      this.shipstationTrakingNumber = data.shipments.map(shipment => shipment.trackingNumber);
+    this.barcodeScanned = false;
+    const refinedData:any = this.processPayload(data);
+    localStorage.setItem(environment.step2, JSON.stringify(refinedData));
+    if (refinedData) {
+      this.shipstationTrakingNumber = refinedData.TrackingNumbers;
       this.currentStep = 3;
       this.signInMessage = 'SCAN_TRACKER_LABEL';
       this.errorMessage = false;
       this.displayMessage('ORDER_SCANNED_SUCCESSFUL');
+      const trakingData =  this.transformData(refinedData);
+      localStorage.setItem(environment.step2TrakingDetails, JSON.stringify(trakingData));
     } else {
       this.currentStep = 2;
       this.signInMessage = 'SCAN_ORDER_LABEL';
       this.errorMessage = true;
       this.displayMessage('INVALID_ORDER_ID');
+      localStorage.removeItem(environment.step2TrakingDetails);
     }
   }
 
+  processPayload(data: any): any {
+    let parsedPayload;
+    if (typeof data.response_payload === 'string') {
+      try {
+        parsedPayload = JSON.parse(data.response_payload);
+        // Optionally, you can replace the string with the parsed object
+        data.response_payload = parsedPayload;
+      } catch (error) {
+        console.error('Failed to parse JSON:', error);
+        // Handle the error or return null, depending on your requirements
+        return null;
+      }
+    } else {
+      parsedPayload = data.response_payload;
+    }
+
+    return parsedPayload;
+  }
+
+  private validateStep2(){
+    const stepTwoData = JSON.parse(localStorage.getItem(environment.step2));
+    if(stepTwoData){
+      this.validateTrakingDetails(stepTwoData);
+      this.shipstationTrakingNumber = stepTwoData.TrackingNumbers;
+      this.currentStep = 3;
+      this.signInMessage = 'SCAN_TRACKER_LABEL';
+      this.errorMessage = false;
+    }else{
+      this.currentStep = 2;
+      this.signInMessage = 'SCAN_ORDER_LABEL';
+    }
+  }
+
+
+
+  private validateTrakingDetails(stepTwoData:any){
+    if(!this.orderDetailsExist){
+      const trakingData =  this.transformData(stepTwoData);
+      localStorage.setItem(environment.step2TrakingDetails, JSON.stringify(trakingData));
+      this.orderDetailsExist = true;
+    }else{
+      localStorage.removeItem(environment.step2TrakingDetails);
+    }
+
+  }
+
+  transformData(oldData: any): any {
+    const newData = {
+        sessionId: oldData.SessionId,
+        tracking_payload: {
+            TrackingNumbers: oldData.TrackingNumbers.map((trackingNumber: string) => {
+                return {
+                    TrackingNumber: trackingNumber,
+                    IsVerified: false  // Assuming you want this to always be true
+                };
+            })
+        }
+    };
+    return newData;
+  }
+
+  /****************************** End Of Step-2  *********************************/
+
+
+  /****************************** Start Of Step-3  *********************************/
+
   private verifyTrackingNumber(trackingNumber: string): void {
-    //const refinedValue = '802643821990232660';
+    this.barcodeScanned = true;
     const refinedValue = this.removeSpecialChars(trackingNumber);
-    this.shipStationService.getShisatationDataByTrakingNumber(refinedValue).subscribe({
+    const updatedTakingDetails = this.verifyTrackingNumbers(refinedValue);
+
+    this.shipStationService.validateTrackingDetails(updatedTakingDetails).subscribe();
+    this.currentStep = 4;
+    setTimeout(() => {
+      this.notifyMessage = '';
+      this.currentStep = 2;
+      this.signInMessage = 'SCAN_ORDER_LABEL';
+      localStorage.removeItem(environment.step2);
+      localStorage.removeItem(environment.step2TrakingDetails);
+    }, 5000);
+    /*this.shipStationService.validateTrackingDetails(updatedTakingDetails).subscribe({
       next: data => this.handleTrackingResponse(data),
       error: (error:any) => {
         this.errorMessage = true;
         this.displayMessage('INVALID_TRACKING_NUMBER');
         console.error("Error:", error);
       }
+    });*/
+  }
+
+  private verifyTrackingNumbers(trackingNumber){
+    const trakingCacheData = JSON.parse(localStorage.getItem(environment.step2TrakingDetails));
+    const trackingNumbers = trakingCacheData.tracking_payload.TrackingNumbers;
+    let isUpdated = false;
+    trackingNumbers.forEach((trackingItem: any) => {
+      if (trackingItem.TrackingNumber === trackingNumber) {
+          trackingItem.IsVerified = true;
+          isUpdated = true;
+      }
     });
+    if (isUpdated) {
+      localStorage.setItem(environment.step2TrakingDetails, JSON.stringify(trakingCacheData));
+    }
+    return trakingCacheData;
+
   }
 
   private handleTrackingResponse(data: any): void {
-
+    this.barcodeScanned = false;
     if (data && data.shipments && data.shipments.length > 0) {
 
       if(this.shipstationTrakingNumber.length > 0){
         //this.getConfirmationFromUser();
       }
+
       const receivedTrackingNumbers: string[] = data.shipments.map(shipment => shipment.trackingNumber);
       const isTrackingNumberExists = receivedTrackingNumbers.some(trackingNumber =>
         this.shipstationTrakingNumber.includes(trackingNumber)
@@ -217,12 +362,13 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /****************************** End Of Step-3  *********************************/
+
 
   getConfirmationFromUser(){
     const modalRefApprove = this.modalService.open(TrakingOrderConfirmationComponent);
-    modalRefApprove.componentInstance.UserData.subscribe((data:any) => {
-
-      alert();
+    modalRefApprove.componentInstance.OutputData.subscribe((data:any) => {
+      alert(data);
     });
   }
 

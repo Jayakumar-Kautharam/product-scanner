@@ -1,6 +1,7 @@
 {
   "SIGN_IN_MESSAGE": "Escanee la etiqueta de usuario",
   "USER_AUTHENTICATED": "Usuario autenticado",
+  "AUTHENTICATION_FAILED": "Autenticación fallida",
   "SCAN_ORDER_LABEL": "Escanee la etiqueta del pedido",
   "INVALID_ORDER_ID": "ID de pedido no válido",
   "ORDER_SCANNED_SUCCESSFUL": "Pedido escaneado con éxito",
@@ -14,5 +15,6 @@
   "CONFIRMATION": "Confirmación",
   "MULTIPLE_TRACKING_NUMBERS_FOUND": "Se encontraron varios números de seguimiento. ¿Quieres continuar?",
   "CANCEL": "Cancelar",
-  "CONTINUE": "Continuar"
+  "CONTINUE": "Continuar",
+  "EMPTY": ""
 }

@@ -13,7 +13,7 @@
               ></app-switch-toggle>-->
               <select [(ngModel)]="selectedLanguage" (change)="changeLanguage($event)" class="language-select">
                 <option value="en">English - EN</option>
-                <option value="es">Española - ES</option>
+                <option value="es">Español - ES</option>
               </select>
             </li>
             <li class="nav-item mr-2 fontSize-12" >
@@ -28,7 +28,7 @@
         </nav>
         <h4 class="float-left" id="heading">{{ signInMessage | translate }}</h4>
         <div class="fixed-message alertMessage pt-0 pb-0">
-          <p [ngClass]="{'text-danger': errorMessage }" class="" *ngIf="currentStep != 4">{{ notifyMessage | translate }}</p>
+          <p [ngClass]="{'text-danger': errorMessage }" class="" *ngIf="notifyMessage != '' && currentStep != 4">{{ notifyMessage | translate }}</p>
           <p *ngIf="currentStep === 4">
             <img src="https://i.imgur.com/GwStPmg.png" class="fit-image">{{ 'TRACKING_NUMBER_VERIFIED' | translate }}
           </p>
