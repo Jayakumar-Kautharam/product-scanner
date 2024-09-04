@@ -13,3 +13,16 @@ video {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.toast-container{
+  position: fixed !important;
+	top: 10px !important;
+  right: 10px !important;
+  z-index: 99999;
+}
+.toast-container .toast-success{
+	padding:10px;
+  background-color: #b7e4c7 !important;
+  color: #2d6a4f !important;
+  font-size: small;
+  font-weight: 600;
+}

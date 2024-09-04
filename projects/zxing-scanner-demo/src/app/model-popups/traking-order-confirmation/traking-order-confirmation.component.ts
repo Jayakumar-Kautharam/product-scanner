@@ -10,7 +10,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class TrakingOrderConfirmationComponent {
 
   @Output() OutputData: EventEmitter<Boolean> = new EventEmitter();
-
+  @Input() inputData: any;
   constructor(
     private translate: TranslateService,
     public modal: NgbActiveModal,

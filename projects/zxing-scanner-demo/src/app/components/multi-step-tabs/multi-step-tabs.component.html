@@ -26,9 +26,12 @@
             <li class="nav-item" *ngIf="userDeatils.Authentication" (click)="logoutUserAuth()" ><i class="fa fa-power-off mr-2 marginBottom7" aria-hidden="true"></i></li>
           </ul>
         </nav>
-        <h4 class="float-left" id="heading">{{ signInMessage | translate }}</h4>
+        <!--<h4 class="float-left"  id="heading">{{ signInMessage | translate }}</h4>-->
+        <h4 class="float-left"  id="heading">SCAN BARCODE</h4>
         <div class="fixed-message alertMessage pt-0 pb-0">
-          <p [ngClass]="{'text-danger': errorMessage }" class="" *ngIf="notifyMessage != '' && currentStep != 4">{{ notifyMessage | translate }}</p>
+          <p  class="notifyMessage" *ngIf="trackingData != '' && currentStep != 4"><i class="fa fa-info-circle"></i> {{ trackingData }}</p>
+
+          <p class="text-align-left oredrId" *ngIf="orderId !='' && currentStep != 4">{{ orderId }}</p>
           <p *ngIf="currentStep === 4">
             <img src="https://i.imgur.com/GwStPmg.png" class="fit-image">{{ 'TRACKING_NUMBER_VERIFIED' | translate }}
           </p>
@@ -40,7 +43,7 @@
             <li [ngClass]="{'active': (currentStep > 3 && userDeatils.Authentication)}" id="confirm"><strong>{{ 'TRACKING' | translate }}</strong></li>
           </ul>
           <div class="parentScanner">
-            <small>{{ scannedValue }}</small>
+            <!--<small>{{ scannedValue }}</small>-->
             <app-scanner *ngIf="cameraMode" class="childScaner" (scannerValue)="getScannedValue($event)"></app-scanner>
             <img *ngIf="!cameraMode" class="childScanerImg" src="../../../assets/images/scanner.gif" alt="Loading...">
           </div>
@@ -53,6 +56,7 @@
             type="hidden"
             autofocus
           />
+          <app-loader [isLoading]="barcodeScanned && currentStep != 3 "></app-loader>
       </div>
     </div>
   </div>

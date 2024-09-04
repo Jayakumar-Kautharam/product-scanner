@@ -1,6 +1,7 @@
 {
   "SIGN_IN_MESSAGE": "Scan User Label",
   "USER_AUTHENTICATED": "User Authenticated",
+  "USER_AUTHENTICATED_POPUP": "User Authenticated. Press OK to Continue",
   "AUTHENTICATION_FAILED": "Authentication Failed",
   "SCAN_ORDER_LABEL": "Scan Order Label",
   "INVALID_ORDER_ID": "Invalid Order Id",
@@ -14,7 +15,10 @@
   "TRACKING": "Tracking",
   "CONFIRMATION": "Confirmation",
   "MULTIPLE_TRACKING_NUMBERS_FOUND": "Multiple tracking numbers found. Do you want to continue?",
+  "PROMPT_MESSAGE": "Do you want to scan another tracking number? Click on Continue or to submit click on Submit",
   "CANCEL": "Cancel",
   "CONTINUE": "Continue",
-  "EMPTY": ""
+  "SUBMIT": "Submit",
+  "EMPTY": "",
+  "OK":"OK"
 }

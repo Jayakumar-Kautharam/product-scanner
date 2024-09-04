@@ -17,16 +17,17 @@ export class ShipstationService {
   constructor(private httpClient: HttpClient) { }
 
   headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
+  //headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
 
 
   // User Authentication
   userUthentication(barcode:any){
-    return this.httpClient.post<any>(`${environment.RediesURL}agent-auth`, barcode, { headers: this.headers });
+    return this.httpClient.post(`${environment.RediesURL}agent-auth`, barcode, { headers: this.headers });
   }
 
   // Step - 2 Scan
   orderScan(orderData:any){
-    return this.httpClient.post<any>(`${environment.RediesURL}validate-order-scan`, orderData, { headers: this.headers });
+    return this.httpClient.post(`${environment.RediesURL}validate-order-scan`, orderData, { headers: this.headers });
   }
   // Step - 2 Scan
   validateTrackingDetails(trackingData:any){

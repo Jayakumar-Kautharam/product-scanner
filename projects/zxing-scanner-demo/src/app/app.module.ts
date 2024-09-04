@@ -20,6 +20,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TrakingOrderConfirmationComponent } from './model-popups/traking-order-confirmation/traking-order-confirmation.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './../assets/i18n/', '.json');
@@ -54,9 +55,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       MultiStepTabsComponent,
       ScannerComponent,
       SwitchToggleComponent,
-
       BootstrapSwitchDirective,
-      TrakingOrderConfirmationComponent
+      TrakingOrderConfirmationComponent,
+      LoaderComponent,
     ],
     bootstrap: [AppComponent]
 })

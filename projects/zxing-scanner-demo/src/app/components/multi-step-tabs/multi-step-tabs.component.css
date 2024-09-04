@@ -112,6 +112,12 @@ p {
   font-size: small;
   font-weight: 500;
 }
+.alertMessage .oredrId{
+  float: left;
+}
+.alertMessage .notifyMessage{
+  float: right;
+}
  .action-button {
   width: 100px;
   background: #259a25;
