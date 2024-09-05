@@ -55,7 +55,7 @@ export class MultiStepTabsComponent implements OnInit, OnDestroy {
     ) {
       this.translate.setDefaultLang(this.selectedLanguage); // Set the default language
 
-      //this.signInMessage = 'SIGN_IN_MESSAGE';
+      //this.signInMessage = 'SIGN_IN_MESSAGE test';
      }
 
   ngOnInit(): void {
